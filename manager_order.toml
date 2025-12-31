@@ -1,0 +1,7 @@
+begin = [
+  'system',
+  'flatpak',
+  'cargo'
+]
+
+end = []
