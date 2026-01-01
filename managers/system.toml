@@ -10,7 +10,7 @@
 
 add = "sudo dnf install -y #:?" # Example: sudo apt install #:?
 remove = "sudo dnf remove -y #:?" # Example: sudo apt remove #:?
-sync = "sudo dnf distro-sync -y #:?" # Example: sudo apt update
+sync = "sudo dnf check-update --refresh -y" # Example: sudo apt update
 upgrade = "sudo dnf upgrade -y #:?" # Example: sudo apt upgrade
 
 plural_name = "system packages"
