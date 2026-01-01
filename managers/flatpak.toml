@@ -1,8 +1,8 @@
 # Flatpak
 
-add = "flatpak install #:?"
-remove = "flatpak uninstall #:?"
-upgrade = "flatpak upgrade"
+add = "sudo flatpak install -y flathub #:?"
+remove = "sudo flatpak uninstall -y #:?"
+upgrade = "sudo flatpak update -y #:?"
 
 plural_name = "flatpaks"
 
