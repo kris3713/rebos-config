@@ -826,5 +826,8 @@ items = [
 # Packages to be installed via Cargo.
 [managers.cargo]
 items = [
-    # "bacon",
+  'atem',
+  'cargo-clean',
+  'metapac',
+  'rebos'
 ]
