@@ -823,6 +823,26 @@ items = [
   'us.zoom.Zoom'
 ]
 
+# Packages to be installed via Homebrew Formula
+[managers.homebrew_formula]
+items = [
+  'ast-grep',
+  'bun',
+  'editorconfig-checker',
+  'fresh',
+  'gcc',
+  'glibc',
+  'libdill',
+  'moor',
+  'pyrefly',
+  'sfk',
+  'television',
+  'trzsz-go',
+  'trzsz-ssh',
+  'ty',
+  'zuban'
+]
+
 # Packages to be installed via Cargo.
 [managers.cargo]
 items = [
