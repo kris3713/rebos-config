@@ -1,0 +1,13 @@
+# Homebrew formula
+
+add = "brew install --formula #:?"
+remove = "brew uninstall --formula #:?"
+sync = "brew update"
+upgrade = "brew upgrade --formula #:?"
+
+plural_name = "brew formula"
+
+hook_name = "brew_formula"
+
+[config]
+many_args = true
