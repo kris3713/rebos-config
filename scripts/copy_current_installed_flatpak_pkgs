@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cmd="$(flatpak list --columns=application | sed "s/.*/'&',/")"
+cmd="$(flatpak list --columns=application | sed -e "s/.*/'&',/")"
 
 if [[ ! -z "$WAYLAND_DISPLAY" ]] && command -v wl-copy &> /dev/null; then
   printf '%s' "$cmd" | wl-copy
