@@ -1,0 +1,268 @@
+#!/usr/bin/env bash
+
+# Escape sequence colours
+
+RED='\033[0;31m'
+RESET='\033[0m'
+
+# Gets the current Fedora release
+FEDORA_RELEASE=$(rpm -E %fedora)
+
+# Downlaod Opensuse URL
+DOWNLOAD_OPENSUSE_URL='https://download.opensuse.org'
+
+# Microsoft
+MICROSOFT_PROD_URL='https://packages.microsoft.com'
+
+
+add_braveBrowser_repo() {
+  local repo_name='brave-browser'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' repo"
+
+  # Check if this repo already exists
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    sudo dnf config-manager --add-repo \
+      "https://$repo_name-rpm-release.s3.brave.com/$repo_name.repo"
+  fi
+}
+
+
+add_adoptium_repo() {
+  local repo_name='adoptium'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' repo"
+
+  #shellcheck disable=SC2155
+  local content="$(cat << EOF
+[Adoptium]
+name=Adoptium
+baseurl=https://packages.$repo_name.net/artifactory/rpm/fedora/\$releasever/\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.$repo_name.net/artifactory/api/gpg/key/public
+EOF
+)"
+
+  # Check if this repo already exists
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    printf '%s' "$content" | sudo tee $repo_location &> /dev/null
+  fi
+}
+
+
+add_SubtitleComposer_repo() {
+  local repo_name='home:maxrd2'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' (SubtitleComposer) repo"
+
+  # Check if this repo already exists
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' (SubtitleComposer) already exists. Skipping..."
+  else
+    sudo dnf config-manager --add-repo \
+      "$DOWNLOAD_OPENSUSE_URL/repositories/$repo_name/Fedora_41/$repo_name.repo"
+  fi
+}
+
+
+add_mkittler_repo() {
+  local repo_name_part='mkittler'
+  local repo_name="home:$repo_name_part"
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' repo"
+
+  #shellcheck disable=SC2155
+  local content="$(cat << EOF
+[home_$repo_name_part]
+name=home_$repo_name_part (stable releases) (Fedora_42)
+type=rpm-md
+baseurl=$DOWNLOAD_OPENSUSE_URL/repositories/home:/$repo_name_part/Fedora_42/
+gpgcheck=1
+gpgkey=$DOWNLOAD_OPENSUSE_URL/repositories/home:/$repo_name_part/Fedora_42/repodata/repomd.xml.key
+enabled=1
+EOF
+)"
+
+  # Check if this repo already exists
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    printf '%s' "$content" | sudo tee $repo_location &> /dev/null
+  fi
+}
+
+
+add_doubleCommander_repo() {
+  local repo_name='home:Alexx2000'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' (Double Commander) repo"
+
+  # Check if this repo already exists
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' (Double Commander) already exists. Skipping..."
+  else
+    sudo dnf config-manager addrepo \
+      "$DOWNLOAD_OPENSUSE_URL/repositories/$repo_name/Fedora_42/$repo_name.repo"
+  fi
+}
+
+
+add_terra_repo() {
+  local repo_name='terra'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' repo"
+
+  # Check if this repo already exists
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    sudo dnf install -y --nogpgcheck \
+      --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' \
+      terra-release
+  fi
+}
+
+
+add_dockerCE_repo() {
+  local repo_name='docker-ce'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' repo"
+
+  # Check if this repo already exists
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    sudo dnf config-manager add-repo \
+      "https://download.docker.com/linux/fedora/$repo_name.repo"
+  fi
+}
+
+
+add_sourcegit_repo() {
+  local repo_name='sourcegit'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' repo"
+
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    curl https://codeberg.org/api/packages/yataro/rpm.repo |
+      sed -e 's/gpgcheck=1/gpgcheck=0/' > "./$repo_name.repo"
+
+    sudo dnf config-manager addrepo "--from-repofile=./$repo_name.repo"
+
+    rm "./$repo_name.repo"
+  fi
+}
+
+
+add_vscode_repo() {
+  local repo_name='vscode'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' repo"
+
+  #shellcheck disable=SC2155
+  local content="$(cat << EOF
+[code]
+name=Visual Studio Code
+baseurl=$MICROSOFT_PROD_URL/yumrepos/vscode
+enabled=1
+autorefresh=1
+type=rpm-md
+gpgcheck=1
+gpgkey=$MICROSOFT_PROD_URL/keys/microsoft.asc
+EOF
+)"
+
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    printf '%s' "$content" | sudo tee $repo_location &> /dev/null
+  fi
+}
+
+
+add_microsoftProd_repo() {
+  local repo_name='microsoft'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' (Microsoft Production) repo"
+
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    sudo dnf config-manager addrepo \
+      "$MICROSOFT_PROD_URL/config/rhel/7/prod.repo"
+  fi
+}
+
+
+add_tlp_repo() {
+  local repo_name='tlp'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' repo"
+
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    sudo dnf install \
+      "https://repo.linrunner.de/fedora/tlp/repos/releases/tlp-release.fc$FEDORA_RELEASE.noarch.rpm"
+  fi
+}
+
+
+add_windsurf_repo() {
+  local repo_name='windsurf'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' repo"
+
+  local url='https://windsurf-stable.codeiumdata.com'
+  #shellcheck disable=SC2155
+  local content="$(cat << EOF
+[windsurf]
+name=Windsurf Repository
+baseurl=$url/wVxQEIWkwPUEAGf3/yum/repo/
+enabled=1
+autorefresh=1
+gpgcheck=1
+gpgkey=$url/wVxQEIWkwPUEAGf3/yum/RPM-GPG-KEY-windsurf
+EOF
+)"
+
+  # Check if this repo already exists
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    printf '%s' "$content" | sudo tee $repo_location &> /dev/null
+  fi
+}
+
+# Attempt to add all required repositories
+add_braveBrowser_repo
+add_adoptium_repo
+add_SubtitleComposer_repo
+add_mkittler_repo
+add_doubleCommander_repo
+add_terra_repo
+add_dockerCE_repo
+add_sourcegit_repo
+add_vscode_repo
+add_microsoftProd_repo
+add_tlp_repo
+add_windsurf_repo
