@@ -1,0 +1,13 @@
+# Homebrew
+
+add = "brew install #:?"
+remove = "brew uninstall #:?"
+sync = "brew update"
+upgrade = "brew upgrade #:?"
+
+plural_name = "brew"
+
+hook_name = "brew"
+
+[config]
+many_args = true
