@@ -761,7 +761,7 @@ items = [
 items = [
   'app.drey.EarTag',
   'be.alexandervanhee.gradia',
-  'com.collabora.Office',
+  # 'com.collabora.Office',
   'com.github.finefindus.eyedropper',
   'com.github.jeromerobert.pdfarranger',
   'com.icons8.Lunacy',
