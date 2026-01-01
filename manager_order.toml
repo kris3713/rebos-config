@@ -1,7 +1,8 @@
 begin = [
-  'system',
-  'flatpak',
-  'cargo'
+  'system_packages',
+  'flatpaks',
+  'crates',
+  'brew'
 ]
 
 end = []
