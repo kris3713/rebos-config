@@ -1,8 +1,8 @@
 begin = [
   'system_packages',
   'flatpaks',
+  'brew_formula',
   'crates',
-  'brew_formula'
 ]
 
 end = []
