@@ -237,7 +237,7 @@ EOF
 
 
 add_microsoftProd_repo() {
-  local repo_name='microsoft'
+  local repo_name='prod'
   local repo_location="/etc/yum.repos.d/$repo_name.repo"
 
   echo "Adding '$repo_name' (Microsoft Production) repo"
