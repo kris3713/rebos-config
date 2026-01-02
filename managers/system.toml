@@ -8,10 +8,10 @@
 
 # Example: add = "sudo apt install #:?"
 
-add = "sudo dnf install -y #:?" # Example: sudo apt install #:?
-remove = "sudo dnf remove -y #:?" # Example: sudo apt remove #:?
+add = "sudo dnf --setopt=install_weak_deps=False install -y #:?" # Example: sudo apt install #:?
+remove = "sudo dnf --setopt=install_weak_deps=False remove -y #:?" # Example: sudo apt remove #:?
 sync = "sudo dnf check-update --refresh -y" # Example: sudo apt update
-upgrade = "sudo dnf upgrade -y #:?" # Example: sudo apt upgrade
+upgrade = "sudo --setopt=install_weak_deps=False dnf upgrade -y #:?" # Example: sudo apt upgrade
 
 plural_name = "system packages"
 
