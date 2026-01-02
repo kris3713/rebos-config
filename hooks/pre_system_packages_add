@@ -295,6 +295,7 @@ EOF
 }
 
 # Attempt to add all required repositories
+add_copr_repos
 add_braveBrowser_repo
 add_adoptium_repo
 add_SubtitleComposer_repo
