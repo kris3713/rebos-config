@@ -47,6 +47,7 @@ add_copr_repos() {
     'nunodias/WasIstLos'
     'sneexy/zen-browser'
     'cboxdoerfer/fsearch'
+    'niohiani/MiscellanyMarketPlace'
   )
 
   for repo in "${repos[@]}"; do
@@ -69,6 +70,21 @@ add_braveBrowser_repo() {
   else
     sudo dnf config-manager addrepo \
       "--from-repofile=https://$repo_name-rpm-release.s3.brave.com/$repo_name.repo"
+  fi
+}
+
+
+add_onlyoffice_repo() {
+  local repo_name='onlyoffice'
+  local repo_location="/etc/yum.repos.d/$repo_name.repo"
+
+  echo "Adding '$repo_name' repo"
+
+  # Check if this repo already exists
+  if [[ -f $repo_location ]]; then
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+  else
+    sudo dnf install -y "https://download.$repo_name.com/repo/centos/main/noarch/$repo_name-repo.noarch.rpm"
   fi
 }
 
@@ -245,7 +261,7 @@ add_microsoftProd_repo() {
   echo "Adding '$repo_name' (Microsoft Production) repo"
 
   if [[ -f $repo_location ]]; then
-    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
+    echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' (Microsoft Production) already exists. Skipping..."
   else
     sudo dnf config-manager addrepo \
       "--from-repofile=$MICROSOFT_PROD_URL/config/rhel/7/prod.repo"
@@ -262,7 +278,7 @@ add_tlp_repo() {
   if [[ -f $repo_location ]]; then
     echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
   else
-    sudo dnf install \
+    sudo dnf install -y \
       "https://repo.linrunner.de/fedora/tlp/repos/releases/tlp-release.fc$FEDORA_RELEASE.noarch.rpm"
   fi
 }
@@ -299,6 +315,7 @@ EOF
 add_copr_repos
 add_braveBrowser_repo
 add_adoptium_repo
+add_onlyoffice_repo
 add_SubtitleComposer_repo
 add_mkittler_repo
 add_doubleCommander_repo
