@@ -21,7 +21,6 @@ MICROSOFT_PROD_URL='https://packages.microsoft.com'
 add_copr_repos() {
   local repos=(
     'karlisk/ventoy'
-    'architektapx/veracrypt'
     'aquacash5/quickemu'
     '3fz-asa/mtoc'
     'birkch/dbeaver'
