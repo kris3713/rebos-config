@@ -42,7 +42,7 @@ add_copr_repos() {
     'sergiomb/electrons'
     'bigjapka/VeraCrypt'
     'kwizart/fedy'
-    'nunodias/WasIstLo'
+    'nunodias/WasIstLos'
     'sneexy/zen-browser'
     'cboxdoerfer/fsearch'
   )
