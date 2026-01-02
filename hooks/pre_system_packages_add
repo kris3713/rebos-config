@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Ensure running as root
+sudo -v
+
 # Escape sequence colours
 
 RED='\033[0;31m'
@@ -15,6 +18,44 @@ DOWNLOAD_OPENSUSE_URL='https://download.opensuse.org'
 MICROSOFT_PROD_URL='https://packages.microsoft.com'
 
 
+add_copr_repos() {
+  local repos=(
+    'karlisk/ventoy'
+    'architektapx/veracrypt'
+    'aquacash5/quickemu'
+    '3fz-asa/mtoc'
+    'birkch/dbeaver'
+    'birkch/QDiskInfo'
+    'atim/resources'
+    'zliced13/figma-linux'
+    'zliced13/YACR'
+    'relativesure/all-packages'
+    'gierth/tools-rust'
+    'jackgreiner/MystiQ'
+    'deltacopy/waterfox'
+    'mruprich/wget'
+    'wezfurlong/wezterm-nightly'
+    'schumischumi/floorp'
+    'sneexy/floorp'
+    'scottames/mise'
+    'anifyuliansyah/ab-download-manager'
+    'lilay/topgrade'
+    'sergiomb/electrons'
+    'bigjapka/VeraCrypt'
+    'kwizart/fedy'
+    'nunodias/WasIstLo'
+    'sneexy/zen-browser'
+    'cboxdoerfer/fsearch'
+  )
+
+  for repo in "${repos[@]}"; do
+    if ! dnf copr list | grep -q "$repo"; then
+      sudo dnf copr enable -y "$repo"
+    fi
+  done
+}
+
+
 add_braveBrowser_repo() {
   local repo_name='brave-browser'
   local repo_location="/etc/yum.repos.d/$repo_name.repo"
@@ -25,8 +66,8 @@ add_braveBrowser_repo() {
   if [[ -f $repo_location ]]; then
     echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
   else
-    sudo dnf config-manager --add-repo \
-      "https://$repo_name-rpm-release.s3.brave.com/$repo_name.repo"
+    sudo dnf config-manager addrepo \
+      "--from-repofile=https://$repo_name-rpm-release.s3.brave.com/$repo_name.repo"
   fi
 }
 
@@ -67,8 +108,8 @@ add_SubtitleComposer_repo() {
   if [[ -f $repo_location ]]; then
     echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' (SubtitleComposer) already exists. Skipping..."
   else
-    sudo dnf config-manager --add-repo \
-      "$DOWNLOAD_OPENSUSE_URL/repositories/$repo_name/Fedora_41/$repo_name.repo"
+    sudo dnf config-manager addrepo \
+      "--from-repofile=$DOWNLOAD_OPENSUSE_URL/repositories/$repo_name/Fedora_41/$repo_name.repo"
   fi
 }
 
@@ -112,7 +153,7 @@ add_doubleCommander_repo() {
     echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' (Double Commander) already exists. Skipping..."
   else
     sudo dnf config-manager addrepo \
-      "$DOWNLOAD_OPENSUSE_URL/repositories/$repo_name/Fedora_42/$repo_name.repo"
+      "--from-repofile=$DOWNLOAD_OPENSUSE_URL/repositories/$repo_name/Fedora_42/$repo_name.repo"
   fi
 }
 
@@ -144,8 +185,8 @@ add_dockerCE_repo() {
   if [[ -f $repo_location ]]; then
     echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
   else
-    sudo dnf config-manager add-repo \
-      "https://download.docker.com/linux/fedora/$repo_name.repo"
+    sudo dnf config-manager addrepo \
+      "--from-repofile=https://download.docker.com/linux/fedora/$repo_name.repo"
   fi
 }
 
@@ -206,7 +247,7 @@ add_microsoftProd_repo() {
     echo -e "${RED}ERROR: ${RESET}The repository '$repo_name' already exists. Skipping..."
   else
     sudo dnf config-manager addrepo \
-      "$MICROSOFT_PROD_URL/config/rhel/7/prod.repo"
+      "--from-repofile=$MICROSOFT_PROD_URL/config/rhel/7/prod.repo"
   fi
 }
 
