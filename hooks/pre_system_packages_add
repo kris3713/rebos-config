@@ -19,6 +19,8 @@ MICROSOFT_PROD_URL='https://packages.microsoft.com'
 
 
 add_copr_repos() {
+  echo 'Adding COPR repos'
+
   local repos=(
     'karlisk/ventoy'
     'aquacash5/quickemu'
